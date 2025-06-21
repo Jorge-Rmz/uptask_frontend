@@ -1,6 +1,5 @@
-import React from 'react'
 import { Outlet } from 'react-router-dom'
-import Logo from '../componets/Logo'
+import Logo from '@/components/Logo'
 export default function AppLayout() {
     return (
         <div>
