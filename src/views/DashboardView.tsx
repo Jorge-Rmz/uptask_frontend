@@ -1,10 +1,11 @@
-import { getProjects } from "@/api/ProjectAPI";
-import { useQuery } from "@tanstack/react-query";
+import { deleteProject, getProjects } from "@/api/ProjectAPI";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Fragment } from 'react'
 import { Menu, MenuButton, MenuItem, MenuItems, Transition } from '@headlessui/react'
 import { EllipsisVerticalIcon } from '@heroicons/react/20/solid'
 
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
 
 
 export default function DashboardView() {
@@ -12,7 +13,19 @@ export default function DashboardView() {
     queryKey: ['projects'],
     queryFn: getProjects,
   })
-  console.log(data);
+  const queryClient = useQueryClient();
+
+  const { mutate } = useMutation({
+    mutationFn: deleteProject,
+
+    onSuccess: (data) => {
+      toast.success(data);
+      queryClient.invalidateQueries({ queryKey: ['projects'] });
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    }
+  });
 
   if (isLoading) return <p>Cargando...</p>;
 
@@ -63,7 +76,7 @@ export default function DashboardView() {
                         </Link>
                       </MenuItem>
                       <MenuItem>
-                        <Link to={``}
+                        <Link to={`/projects/${project._id}/edit`}
                           className='block px-3 py-1 text-sm leading-6 text-gray-900'>
                           Editar Proyecto
                         </Link>
@@ -72,7 +85,7 @@ export default function DashboardView() {
                         <button
                           type='button'
                           className='block px-3 py-1 text-sm leading-6 text-red-500'
-                          onClick={() => { }}
+                          onClick={() => { mutate(project._id) }}
                         >
                           Eliminar Proyecto
                         </button>
