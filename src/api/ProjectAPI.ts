@@ -43,12 +43,13 @@ export async function getProjectById( id: Project['_id'] ) {
     try {
     
         const { data } = await api(`/projects/${id}`);
-        const response = projectSchema.safeParse(data);
+        // const response = projectSchema.safeParse(data);
         
-        if (response.success) {
-            return response.data;
-        }
-        throw new Error('Error al obtener el proyecto');
+        // if (response.success) {
+        //     return response.data;
+        // }
+        return data;
+        // throw new Error('Error al obtener el proyecto');
     } catch (error) {
         if(isAxiosError(error) && error.response) {
             console.error('Error consultado el proyecto:', error);
