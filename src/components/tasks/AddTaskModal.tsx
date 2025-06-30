@@ -8,7 +8,7 @@ import {
 } from "@headlessui/react";
 import { useForm } from 'react-hook-form'
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import TaskForm from "./TaskForm";
 import type { Task, TaskFormData } from "@/types/index";
 import { createTask } from "@/api/TaskAPI";
@@ -32,10 +32,13 @@ export default function AddTaskModal() {
         description: ""
     }
 
+    const queryClient = useQueryClient();
+
     const { register, handleSubmit, reset, formState: { errors } } = useForm({ defaultValues: initialValues });
     const { mutate } = useMutation({
         mutationFn: createTask,
         onSuccess(message) {
+            queryClient.invalidateQueries({queryKey: ['editProject', projectId ]})
             toast.success(message);
             reset();
             navigate(location.pathname, { replace: true } )

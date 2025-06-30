@@ -13,7 +13,7 @@ export default function EditProjectView() {
     queryFn: () => getProjectById(projectId),
     retry: false,
   })
-  console.log(data);
+  
   if (isLoading) return <p>Cargando...</p>;
   if (isError) return <Navigate to='/404' />;
 
