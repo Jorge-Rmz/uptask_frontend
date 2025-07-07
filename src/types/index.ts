@@ -1,6 +1,19 @@
-import { typeProject } from '@/types/index';
+
 import { z } from "zod";
 
+// Auth and Users
+export const authSchema = z.object({
+    name: z.string(),
+    email: z.string().email(),
+    password: z.string(),
+    password_confirmation: z.string(),
+    token: z.string(),
+})
+
+type Auth = z.infer<typeof authSchema>;
+export type UserLoginForm = Pick<Auth, "email" | "password">;
+export type UserRegistrationForm = Pick<Auth, "name" | "email" | "password" | "password_confirmation">;    
+export type ConfirmToken = Pick<Auth, "token">;
 //Task
 
 export const TaskStatusSchema = z.enum(["pending", "onHold", "inProgress", "underReview", "completed"]);
@@ -37,4 +50,4 @@ export const dashboardProjectSchema = z.array(
 
 export type Project = z.infer<typeof projectSchema>;
 
-export type ProjectFormData = Pick<Project, "projectName" | "clienteName" | "description">;
+export type ProjectFormData = Pick<Project, "projectName" | "clienteName" | "description">; 
