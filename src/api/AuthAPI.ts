@@ -1,5 +1,6 @@
+import { ConfirmToken } from './../types/index';
 import api from "@/lib/axios";
-import type { ConfirmToken, RequestConfirmationCodeForm, UserLoginForm, UserRegistrationForm } from "../types";
+import type { ConfirmToken, ForgotPasswordForm, NewPasswordForm, RequestConfirmationCodeForm, UserLoginForm, UserRegistrationForm } from "../types";
 import { isAxiosError } from "axios";
 
 
@@ -58,7 +59,7 @@ export async function login( formData: UserLoginForm ) {
         const url = "/auth/login";
     
         const { data } = await api.post<string>(url, formData);
-        
+        localStorage.setItem('AUTH_TOKEN', data);
         return data;
         // throw new Error('Error al obtener el proyecto');
     } catch (error) {
@@ -68,3 +69,53 @@ export async function login( formData: UserLoginForm ) {
         }
     }
 }
+
+export async function forgotPassword( formData: ForgotPasswordForm ) {
+    try {
+        const url = "/auth/forgot-password";
+    
+        const { data } = await api.post<string>(url, formData);
+        
+        return data;
+        // throw new Error('Error al obtener el proyecto');
+    } catch (error) {
+        if(isAxiosError(error) && error.response) {
+            const errorMessage = error.response.data.error || 'Error solicitando código para restablecer contraseña';
+            throw new Error(errorMessage);
+        }
+    }
+}
+
+export async function validateToken( formData: ConfirmToken ) {
+    try {
+        const url = "/auth/validate-token";
+    
+        const { data } = await api.post<string>(url, formData);
+        
+        return data;
+        // throw new Error('Error al obtener el proyecto');
+    } catch (error) {
+        if(isAxiosError(error) && error.response) {
+            const errorMessage = error.response.data.error;
+            throw new Error(errorMessage);
+        }
+    }
+}
+
+export async function updatePasswordWithToken( {formData, token}: { formData : NewPasswordForm, token : ConfirmToken['token'] } ) {
+    try {
+        const url = `/auth/update-password/${token}`;
+    
+        const { data } = await api.post<string>(url, formData);
+        
+        return data;
+        // throw new Error('Error al obtener el proyecto');
+    } catch (error) {
+        if(isAxiosError(error) && error.response) {
+            const errorMessage = error.response.data.error;
+            throw new Error(errorMessage);
+        }
+    }
+}
+
+
