@@ -4,14 +4,7 @@ import { TextComponent } from "../TextComponent/TextComponent";
 import { ButtonComponent } from "../boton/ButtonComponent";
 import { TextButtonInner } from "./TextButtonInner";
 
-import {
-  deprecationWarning,
-  ERROR_INVALID_NODEID,
-  ROOT_NODE,
-  DEPRECATED_ROOT_NODE,
-  ERROR_DELETE_TOP_LEVEL_NODE,
-  ERROR_NOT_IN_RESOLVER,
-} from '@craftjs/utils';
+
 
 interface TextButtonProps {
     text?: string;
