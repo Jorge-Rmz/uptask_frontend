@@ -1,3 +1,4 @@
+import { TeamMember } from './index';
 
 import { z } from "zod";
 
@@ -17,6 +18,18 @@ export type ConfirmToken = Pick<Auth, "token">;
 export type RequestConfirmationCodeForm = Pick<Auth, "email">;
 export type ForgotPasswordForm = Pick<Auth, "email">;
 export type NewPasswordForm = Pick<Auth, "password" | "password_confirmation">;
+
+// Auth y Users
+export const userSchema = authSchema.pick({
+    name: true,
+    email: true
+}).extend({
+    _id : z.string()
+})
+
+export type User = z.infer<typeof userSchema>;
+
+
 //Task
 
 export const TaskStatusSchema = z.enum(["pending", "onHold", "inProgress", "underReview", "completed"]);
@@ -54,3 +67,14 @@ export const dashboardProjectSchema = z.array(
 export type Project = z.infer<typeof projectSchema>;
 
 export type ProjectFormData = Pick<Project, "projectName" | "clienteName" | "description">; 
+
+// Team
+export const teamMemberSchema = userSchema.pick({
+    _id: true,
+    name: true,
+    email: true
+});
+
+export const teamMembersSchema = z.array(teamMemberSchema);
+export type TeamMember = z.infer<typeof teamMemberSchema>;
+export type TeamMemberForm = Pick<TeamMember, "email">;
